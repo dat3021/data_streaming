@@ -1,0 +1,46 @@
+version: 1.0.0
+dataset: inventory
+description: "product stock and pricing"
+owner: "warehouse-team"
+service: "inventory-service"
+
+schema:
+  - column: id
+    type: BIGINT
+    description: "Primary key"
+    constraints:
+      - not_null
+      - primary_key
+      
+  - column: product_name
+    type: STRING
+    description: "Name of the product"
+    constraints:
+      - not_null
+      
+  - column: quantity
+    type: INTEGER
+    description: "Stock level"
+    constraints:
+      - not_null
+      
+  - column: price
+    type: DECIMAL
+    description: "Unit price"
+    constraints:
+      - not_null
+
+quality_rules:
+  - name: positive_quantity
+    column: quantity
+    expectation: expect_column_values_to_be_greater_than_or_equal_to
+    value: 0
+  - name: valid_price
+    column: price
+    expectation: expect_column_values_to_be_greater_than
+    value: 0
+
+transport:
+  type: kafka
+  topic: raw.inventory_service.inventory
+  format: json

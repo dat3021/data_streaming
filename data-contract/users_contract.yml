@@ -1,0 +1,47 @@
+version: 1.0.0
+dataset: users
+description: "users basic info"
+owner: "data-platform-team"
+service: "user-service"
+
+schema:
+  - column: id
+    type: BIGINT
+    description: "Primary key, auto-incremented"
+    constraints:
+      - not_null
+      - primary_key
+      
+  - column: first_name
+    type: STRING
+    description: "user's first name"
+    constraints:
+      - not_null
+      
+  - column: last_name
+    type: STRING
+    description: "user's last name"
+    constraints:
+      - not_null
+      
+  - column: email
+    type: STRING
+    description: "user's email"
+    constraints:
+      - not_null
+      - unique
+      - pattern: "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$"
+
+quality_rules:
+  - name: valid_email_format
+    column: email
+    expectation: expect_column_values_to_match_regex
+  - name: no_empty_names
+    column: first_name
+    expectation: expect_column_value_length_to_be_between
+    min_value: 1
+
+transport:
+  type: kafka
+  topic: raw.user_service.users
+  format: json

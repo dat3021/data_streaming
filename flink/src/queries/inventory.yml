@@ -1,0 +1,45 @@
+dataset: inventory
+source_ddl: |
+  CREATE TABLE IF NOT EXISTS inventory_source (
+    id BIGINT,
+    product_name STRING,
+    quantity INT,
+    price DECIMAL(10, 2)
+  ) WITH (
+    'connector' = 'kafka',
+    'topic' = 'publication.public.inventory',
+    'properties.bootstrap.servers' = 'kafka:29092',
+    'properties.group.id' = 'flink-validator-group',
+    'scan.startup.mode' = 'earliest-offset',
+    'format' = 'debezium-avro-confluent',
+    'debezium-avro-confluent.url' = 'http://schema-registry:8081'
+  )
+
+sink_ddl: |
+  CREATE TABLE IF NOT EXISTS paimon_catalog.paimon_db.inventory_sink (
+    id BIGINT,
+    product_name STRING,
+    quantity INT,
+    price DECIMAL(10, 2),
+    _ingestion_ts TIMESTAMP(3)
+  ) WITH (
+    'connector' = 'paimon',
+    'metastore' = 'filesystem',
+    'bucket' = '-1'
+  )
+
+dlq_sink_ddl: |
+  CREATE TABLE IF NOT EXISTS paimon_catalog.paimon_db.inventory_dlq_sink (
+    id BIGINT,
+    product_name STRING,
+    quantity INT,
+    price DECIMAL(10, 2),
+    _error_reason STRING,
+    _ingestion_ts TIMESTAMP(3),
+    PRIMARY KEY (id, _ingestion_ts) NOT ENFORCED
+  ) WITH (
+    'connector' = 'paimon',
+    'metastore' = 'filesystem',
+    'file.format' = 'avro',
+    'path' = 's3://data-streaming-pj/dlq/inventory/'
+  )

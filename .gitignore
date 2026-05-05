@@ -1,0 +1,32 @@
+# Secrets
+.env
+*.pem
+
+# Python
+**/__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.pytest_cache/
+*.python-version
+
+# Infrastructure / Local Data
+.data/
+checkpoints/
+savepoints/
+data/
+*.jar
+flink/src/__pycache__
+.dockerignore
+
+# IDEs
+.vscode/
+.idea/
+
+# AI Tools
+.agents/
+.gemini/
+
+# OS Junk
+.DS_Store
+Thumbs.db

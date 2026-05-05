@@ -1,0 +1,42 @@
+version: 1.0.0
+dataset: orders
+description: "customer transaction records"
+owner: "sales-team"
+service: "order-service"
+
+schema:
+  - column: id
+    type: BIGINT
+    description: "Primary key"
+    constraints:
+      - not_null
+      - primary_key
+      
+  - column: user_id
+    type: BIGINT
+    description: "Reference to users table"
+    constraints:
+      - not_null
+      
+  - column: product_id
+    type: BIGINT
+    description: "Reference to inventory table"
+    constraints:
+      - not_null
+      
+  - column: status
+    type: STRING
+    description: "Order fulfillment status"
+    constraints:
+      - not_null
+
+quality_rules:
+  - name: valid_status
+    column: status
+    expectation: expect_column_values_to_be_in_set
+    values: ["PENDING", "SHIPPED", "COMPLETED", "CANCELLED"]
+
+transport:
+  type: kafka
+  topic: raw.order_service.orders
+  format: json
