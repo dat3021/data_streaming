@@ -3,6 +3,7 @@
 A robust, production-ready data engineering pipeline that captures database changes (CDC), validates them against **Data Contracts**, and sinks them into an **S3-based Data Lakehouse** using Apache Paimon.
 
 ##  Architecture
+<img width="850" height="308" alt="image" src="https://github.com/user-attachments/assets/10e11386-84ab-4ca3-a9c2-2278df7eb5b5" />
 
 1.  **Source**: PostgreSQL database with Full Replica Identity.
 2.  **Ingestion**: Debezium (CDC) streaming change events to Kafka via Confluent Avro Schema Registry.
