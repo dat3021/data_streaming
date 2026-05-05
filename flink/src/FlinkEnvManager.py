@@ -4,7 +4,6 @@ from pyflink.table import StreamTableEnvironment, EnvironmentSettings
 class FlinkEnvManager:
     @staticmethod
     def setup_table_env():
-        """Handles the heavy lifting of setting up the PyFlink environment."""
         env = StreamExecutionEnvironment.get_execution_environment()
         settings = EnvironmentSettings.new_instance().in_streaming_mode().build()
         t_env = StreamTableEnvironment.create(env, environment_settings=settings)
@@ -17,7 +16,6 @@ class FlinkEnvManager:
 
     @staticmethod
     def register_metadata(t_env, validate_record_udf):
-        """Registers the Paimon Catalog, Databases, and UDFs."""
         t_env.execute_sql("""
             CREATE CATALOG paimon_catalog WITH (
                 'type' = 'paimon',

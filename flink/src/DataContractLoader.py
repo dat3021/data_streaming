@@ -3,15 +3,12 @@ import yaml
 from typing import Dict, Any
 
 class DataContractLoader:
-    """Helper class to load and manage Data Contracts from YAML files."""
-    
     def __init__(self, contract_dir: str = "../data-contract"):
         self.contract_dir = contract_dir
         self.contracts: Dict[str, Any] = {}
         self.load_all()
 
     def load_all(self):
-        """Scan directory and load all .yml files."""
         if not os.path.exists(self.contract_dir):
             print(f"Warning: Contract directory {self.contract_dir} not found.")
             return
@@ -27,5 +24,4 @@ class DataContractLoader:
                         print(f"Loaded contract for dataset: {dataset}")
 
     def get_contract(self, dataset: str) -> Dict[str, Any]:
-        """Retrieve a specific contract."""
         return self.contracts.get(dataset)

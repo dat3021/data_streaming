@@ -5,24 +5,14 @@ from pyflink.table import DataTypes
 from DataContractLoader import DataContractLoader
 
 class DataContracValidator(ScalarFunction):
-    """
-    Flink UDF to validate incoming records against Data Contracts.
-    Returns True if valid, False otherwise.
-    """
 
     def __init__(self):
         self.loader = None
 
     def open(self, function_context):
-        """Initialize loader once per TaskManager execution."""
         self.loader = DataContractLoader(contract_dir="/opt/flink/usrlib/data-contract")
 
     def eval(self, dataset_name: str, record_json: str) -> bool:
-        """
-        Main validation logic.
-        :param dataset_name: The name of the dataset
-        :param record_json: The row data serialized as a JSON string
-        """
         contract = self.loader.get_contract(dataset_name)
         if not contract:
             return True 
